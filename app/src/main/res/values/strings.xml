@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">TweetSplit</string>
+    <string name="app_name">TwitSplit</string>
+    <string name="please_wait">Processing! Please wait…</string>
+	<string name="dummy_tweet">cgj jjg jhjl ijiij cgj jjg jhjl ijiij cgj jjg jhjl ijiij cgj jjg jhjl ijiij</string>
+    <string name="no_views">You haven\'t tweeted any message yet. Click the + button below to post your first tweet.
+    </string>
+    <string name="new_tweet_title">New Tweet</string>
+    <string name="tweet">Tweet!</string>
+    <string name="cancel">Cancel</string>
 </resources>

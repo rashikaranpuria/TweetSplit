@@ -5,6 +5,7 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import com.rashikaranpuria.tweetsplit.data.db.entity.Tweet
+import io.reactivex.Completable
 import io.reactivex.Flowable
 
 @Dao
@@ -15,6 +16,6 @@ interface TweetDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllTweets(tweets: List<Tweet>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     fun insertTweet(tweet: Tweet)
 }

@@ -5,7 +5,6 @@ import android.app.ProgressDialog
 import android.support.v7.app.AppCompatActivity
 import org.jetbrains.anko.toast
 
-@SuppressLint("Registered")
 open class BaseActivity: AppCompatActivity(), IBaseView {
 
     open lateinit var mProgressDialog: ProgressDialog

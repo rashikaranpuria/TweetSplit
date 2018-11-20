@@ -1,7 +1,8 @@
-package com.rashikaranpuria.tweetsplit
+package com.rashikaranpuria.tweetsplit.ui
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.rashikaranpuria.tweetsplit.R
 
 class MainActivity : AppCompatActivity() {
 

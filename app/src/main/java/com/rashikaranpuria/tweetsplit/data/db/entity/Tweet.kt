@@ -7,6 +7,7 @@ import android.arch.persistence.room.PrimaryKey
 @Entity
 data class Tweet (
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo
     val id: Int,
 
     @ColumnInfo

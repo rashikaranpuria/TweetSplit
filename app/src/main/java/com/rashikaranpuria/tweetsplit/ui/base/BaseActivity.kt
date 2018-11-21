@@ -6,6 +6,13 @@ import android.support.v7.app.AppCompatActivity
 import org.jetbrains.anko.toast
 
 open class BaseActivity: AppCompatActivity(), IBaseView {
+    override fun showError(errorId: Int) {
+        toast(errorId)
+    }
+
+    override fun showMessage(msg_id: Int) {
+        toast(msg_id)
+    }
 
     open lateinit var mProgressDialog: ProgressDialog
 

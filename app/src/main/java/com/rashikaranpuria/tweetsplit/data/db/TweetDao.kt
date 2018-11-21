@@ -16,6 +16,6 @@ interface TweetDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllTweets(tweets: List<Tweet>)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTweet(tweet: Tweet)
 }

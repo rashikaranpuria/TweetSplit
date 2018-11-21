@@ -7,4 +7,9 @@
     <string name="new_tweet_title">New Tweet</string>
     <string name="tweet">Tweet!</string>
     <string name="cancel">Cancel</string>
+    <string name="tweet_success_msg">Tweeted successfully!</string>
+    <string name="unable_to_parse_error">Message can not be parsed into chunks. Try adding some spaces between your
+        words!
+    </string>
+    <string name="empty_input_error">You need to enter something!</string>
 </resources>

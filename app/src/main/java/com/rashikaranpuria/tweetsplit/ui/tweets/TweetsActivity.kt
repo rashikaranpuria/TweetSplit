@@ -60,13 +60,11 @@ class TweetsActivity: BaseActivity(), ITweetsView {
                             textAlignment = right
                             negativeButton(R.string.cancel) {}
                             positiveButton(R.string.tweet) {
-                                onClick {
-                                    if (tweetEditText.text.toString() == "") {
-                                        toast("You need to enter something")
-                                    }
-                                    else {
-                                        mTweetsActivityPresenter.newTweetPostButtonClicked(tweetEditText.text.toString())
-                                    }
+                                if (tweetEditText.text.isBlank()) {
+                                    toast(R.string.empty_input_error)
+                                }
+                                else {
+                                    mTweetsActivityPresenter.newTweetPostButtonClicked(tweetEditText.text.toString())
                                 }
                             }
                         }

@@ -17,5 +17,8 @@ interface TweetDao {
     fun insertAllTweets(tweets: List<Tweet>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTweet(tweet: Tweet)
+    fun insertTweet(tweet: Tweet): Long
+
+    @Query("SELECT * FROM tweet WHERE id = :id")
+    fun getTweetById(id: Long): Flowable<Tweet>
 }

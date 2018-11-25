@@ -12,4 +12,5 @@
         words!
     </string>
     <string name="empty_input_error">You need to enter something!</string>
+    <string name="dummy_string">Dummy string</string>
 </resources>

@@ -2,15 +2,11 @@ package com.rashikaranpuria.tweetsplit.ui.tweets
 
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.support.design.R.attr.layoutManager
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.widget.EditText
 import com.rashikaranpuria.tweetsplit.R
 import com.rashikaranpuria.tweetsplit.TweetApplication
-import com.rashikaranpuria.tweetsplit.data.db.IDbManager
 import com.rashikaranpuria.tweetsplit.data.db.entity.Tweet
 import com.rashikaranpuria.tweetsplit.di.module.TweetsActivityModule
 import com.rashikaranpuria.tweetsplit.ui.base.BaseActivity
@@ -60,12 +56,7 @@ class TweetsActivity: BaseActivity(), ITweetsView {
                             textAlignment = right
                             negativeButton(R.string.cancel) {}
                             positiveButton(R.string.tweet) {
-                                if (tweetEditText.text.isBlank()) {
-                                    toast(R.string.empty_input_error)
-                                }
-                                else {
-                                    mTweetsActivityPresenter.newTweetPostButtonClicked(tweetEditText.text.toString())
-                                }
+                                mTweetsActivityPresenter.newTweetPostButtonClicked(tweetEditText.text.toString())
                             }
                         }
                     }
@@ -78,6 +69,11 @@ class TweetsActivity: BaseActivity(), ITweetsView {
         tweets_list.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(this@TweetsActivity)
+//          Uncomment below to show the most latest tweets first
+//                .apply {
+//                reverseLayout = true
+//                stackFromEnd = false
+//            }
             adapter = mTweetsAdapter
         }
     }

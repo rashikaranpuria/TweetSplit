@@ -6,8 +6,8 @@ import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 import com.rashikaranpuria.tweetsplit.data.db.entity.Tweet
 
-@Database( entities = [Tweet::class], version = 1 )
-abstract class TweetDatabase: RoomDatabase() {
+@Database(entities = [Tweet::class], version = 1)
+abstract class TweetDatabase : RoomDatabase() {
     abstract fun tweetDao(): TweetDao
 
     companion object {

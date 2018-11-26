@@ -5,7 +5,6 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import com.rashikaranpuria.tweetsplit.data.db.entity.Tweet
-import io.reactivex.Completable
 import io.reactivex.Flowable
 
 @Dao

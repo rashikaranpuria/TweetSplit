@@ -11,11 +11,18 @@ import com.rashikaranpuria.tweetsplit.data.db.entity.Tweet
 import com.rashikaranpuria.tweetsplit.di.module.TweetsActivityModule
 import com.rashikaranpuria.tweetsplit.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_tweets.*
-import org.jetbrains.anko.*
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.verticalLayout
+import org.jetbrains.anko.padding
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.editText
+import org.jetbrains.anko.linearLayout
+import org.jetbrains.anko.lines
+import org.jetbrains.anko.customView
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import javax.inject.Inject
 
-class TweetsActivity: BaseActivity(), ITweetsView {
+class TweetsActivity : BaseActivity(), ITweetsView {
 
     @Inject
     lateinit var mTweetsActivityPresenter: ITweetsActivityPresenter<ITweetsView>

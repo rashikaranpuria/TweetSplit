@@ -16,9 +16,8 @@ class TweetsAdapter : RecyclerView.Adapter<TweetsAdapter.TweetViewHolder>(), Aut
         autoNotify(oldList, newList) { o, n -> o.id == n.id }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TweetViewHolder
-        = TweetViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.tweet_item, parent, false))
-
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TweetViewHolder =
+        TweetViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.tweet_item, parent, false))
 
     override fun getItemCount(): Int = tweetList.size
 
@@ -26,8 +25,7 @@ class TweetsAdapter : RecyclerView.Adapter<TweetsAdapter.TweetViewHolder>(), Aut
         holder.bind(tweetList[holder.adapterPosition])
     }
 
-
-    class TweetViewHolder(val v: View): RecyclerView.ViewHolder(v) {
+    class TweetViewHolder(private val v: View) : RecyclerView.ViewHolder(v) {
         val tweetTextView = v.findViewById(R.id.text) as TextView
 
         fun bind(tweet: Tweet) {

@@ -1,15 +1,17 @@
 package com.rashikaranpuria.tweetsplit.data
 
+import com.rashikaranpuria.tweetsplit.FakeApplication
 import com.rashikaranpuria.tweetsplit.data.db.IDbManager
 import com.rashikaranpuria.tweetsplit.data.db.entity.Tweet
 import org.junit.Before
 import org.junit.Test
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
+import org.robolectric.annotation.Config
 
+@Config(application = FakeApplication::class)
 class DataManagerTest {
 
     @Mock

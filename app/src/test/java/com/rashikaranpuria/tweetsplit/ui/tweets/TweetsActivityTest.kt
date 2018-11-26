@@ -9,7 +9,6 @@ import com.rashikaranpuria.tweetsplit.R
 import com.rashikaranpuria.tweetsplit.data.db.entity.Tweet
 import junit.framework.Assert.assertEquals
 import kotlinx.android.synthetic.main.activity_tweets.*
-import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -134,5 +133,4 @@ class TweetsActivityTest {
         // verify toast has same text as id res
         Assert.assertEquals(ShadowToast.getTextOfLatestToast(), mTweetActivity.resources.getText(msgId))
     }
-
 }

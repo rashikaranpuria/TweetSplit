@@ -1,6 +1,6 @@
 package com.rashikaranpuria.tweetsplit.ui.base
 
-open class BasePresenter<V: IBaseView>: IBasePresenter<V> {
+open class BasePresenter<V : IBaseView> : IBasePresenter<V> {
     var view: V? = null
 
     override fun onAttach(v: V) {

@@ -4,7 +4,7 @@ import com.rashikaranpuria.tweetsplit.data.db.entity.Tweet
 import io.reactivex.Flowable
 import javax.inject.Inject
 
-class DbManager @Inject constructor(val mTweetDao: TweetDao): IDbManager {
+class DbManager @Inject constructor(val mTweetDao: TweetDao) : IDbManager {
     override fun getAllTweets(): Flowable<List<Tweet>> {
         return mTweetDao.getAllTweets()
     }
@@ -16,5 +16,4 @@ class DbManager @Inject constructor(val mTweetDao: TweetDao): IDbManager {
     override fun addTweet(tweet: Tweet) {
         mTweetDao.insertTweet(tweet)
     }
-
 }

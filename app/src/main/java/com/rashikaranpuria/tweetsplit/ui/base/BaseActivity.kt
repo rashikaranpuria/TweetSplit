@@ -1,11 +1,10 @@
 package com.rashikaranpuria.tweetsplit.ui.base
 
-import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.support.v7.app.AppCompatActivity
 import org.jetbrains.anko.toast
 
-open class BaseActivity: AppCompatActivity(), IBaseView {
+open class BaseActivity : AppCompatActivity(), IBaseView {
     override fun showError(errorId: Int) {
         toast(errorId)
     }

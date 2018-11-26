@@ -19,7 +19,7 @@ class TweetDatabaseReadWriteTest {
 
     @Before
     fun setup() {
-        //create an in-memory version of database as it is hermetic
+        // create an in-memory version of database as it is hermetic
         database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(), TweetDatabase::class.java)
             .allowMainThreadQueries()
             .build()
@@ -55,5 +55,4 @@ class TweetDatabaseReadWriteTest {
         const val dummyString2 = "some dummy tweet 2"
         const val dummyString3 = "some dummy tweet 3"
     }
-
 }

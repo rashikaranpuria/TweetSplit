@@ -12,14 +12,13 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 const val TWEET_LENGTH_THRESHOLD = 50
-class TweetsActivityPresenter<V: ITweetsView> @Inject constructor(val mCompositeDisposable: CompositeDisposable, val mDataManager: IDataManager): BasePresenter<V> (), ITweetsActivityPresenter<V> {
+class TweetsActivityPresenter<V : ITweetsView> @Inject constructor(val mCompositeDisposable: CompositeDisposable, val mDataManager: IDataManager) : BasePresenter<V> (), ITweetsActivityPresenter<V> {
 
     override fun newTweetPostButtonClicked(tweetText: String) {
         if (tweetText.isEmpty() || tweetText.isBlank()) {
             view?.showError(R.string.empty_input_error)
             return
-        }
-        else {
+        } else {
             view?.showProgressBar()
             val tweets = getTweets(tweetText)
             if (tweets.isNotEmpty()) {
@@ -49,14 +48,14 @@ class TweetsActivityPresenter<V: ITweetsView> @Inject constructor(val mComposite
         return if (n <= TWEET_LENGTH_THRESHOLD) {
             listOf(Tweet(text = tweetText))
         } else {
-            splitMessage(tweetText).map { str ->  Tweet(text = str) }
+            splitMessage(tweetText).map { str -> Tweet(text = str) }
         }
     }
 
     fun splitMessage(msg: String): Array<String> {
         val wordsInMsg = msg.split(" ")
         val parts = calculatePartsInTweets(wordsInMsg, wordsInMsg.size)
-        if(parts == -1){
+        if (parts == -1) {
             view?.showError(R.string.unable_to_parse_error)
             return arrayOf()
         }
@@ -68,17 +67,16 @@ class TweetsActivityPresenter<V: ITweetsView> @Inject constructor(val mComposite
         var currentPart = 1
         var i = 0
         var lengthOfThisPart = ""
-        while(i < wordsInMsg.size){
-            val partIndicator = if(lengthOfThisPart == ""){
+        while (i < wordsInMsg.size) {
+            val partIndicator = if (lengthOfThisPart == "") {
                 (currentPart.toString() + "/" + parts)
-            }
-            else {
+            } else {
                 ""
             }
             lengthOfThisPart += partIndicator
-            while (i < wordsInMsg.size && lengthOfThisPart.length <= TWEET_LENGTH_THRESHOLD){
+            while (i < wordsInMsg.size && lengthOfThisPart.length <= TWEET_LENGTH_THRESHOLD) {
                 val nextWordAttached = lengthOfThisPart + " " + wordsInMsg[i]
-                if(nextWordAttached.length > TWEET_LENGTH_THRESHOLD){
+                if (nextWordAttached.length > TWEET_LENGTH_THRESHOLD) {
                     break
                 } else {
                     lengthOfThisPart = nextWordAttached
@@ -94,12 +92,12 @@ class TweetsActivityPresenter<V: ITweetsView> @Inject constructor(val mComposite
 
     private fun calculatePartsInTweets(wordsInMsg: List<String>, partsUpperBound: Int): Int {
         var parts = 2
-        while(!isValidPart(wordsInMsg,parts) && parts < partsUpperBound){
+        while (!isValidPart(wordsInMsg, parts) && parts < partsUpperBound) {
             parts++
         }
-        return if(parts >= partsUpperBound){
+        return if (parts >= partsUpperBound) {
             -1
-        }else{
+        } else {
             parts
         }
     }
@@ -108,26 +106,26 @@ class TweetsActivityPresenter<V: ITweetsView> @Inject constructor(val mComposite
         var currentPart = 1
         var i = 0
         var lengthOfThisPart = ""
-        while(i<wordsInMsg.size){
-            val partIndicator = if(lengthOfThisPart == ""){
+        while (i<wordsInMsg.size) {
+            val partIndicator = if (lengthOfThisPart == "") {
                 (currentPart.toString() + "/" + parts)
-            }else{
+            } else {
                 ""
             }
             lengthOfThisPart += partIndicator
-            while (i < wordsInMsg.size && lengthOfThisPart.length <= TWEET_LENGTH_THRESHOLD){
+            while (i < wordsInMsg.size && lengthOfThisPart.length <= TWEET_LENGTH_THRESHOLD) {
                 lengthOfThisPart += " " + wordsInMsg[i]
-                if(lengthOfThisPart.length > TWEET_LENGTH_THRESHOLD){
+                if (lengthOfThisPart.length > TWEET_LENGTH_THRESHOLD) {
                     break
-                }else{
+                } else {
                     i++
                 }
             }
-            if(lengthOfThisPart == partIndicator){
+            if (lengthOfThisPart == partIndicator) {
                 return false
-            }else{
+            } else {
                 currentPart++
-                lengthOfThisPart=""
+                lengthOfThisPart = ""
             }
         }
         return currentPart - 1 == parts
@@ -202,12 +200,11 @@ class TweetsActivityPresenter<V: ITweetsView> @Inject constructor(val mComposite
                 .getAllTweets()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy (
+                .subscribeBy(
                     onNext = {
                         if (it.isEmpty()) {
                             view?.showEmptyView()
-                        }
-                        else {
+                        } else {
                             view?.showTweets(it)
                         }
                         view?.hideProgressDialog()

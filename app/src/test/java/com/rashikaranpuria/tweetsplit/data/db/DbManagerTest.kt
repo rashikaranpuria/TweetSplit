@@ -1,5 +1,6 @@
 package com.rashikaranpuria.tweetsplit.data.db
 
+import com.rashikaranpuria.tweetsplit.FakeApplication
 import com.rashikaranpuria.tweetsplit.data.db.entity.Tweet
 import org.junit.Before
 import org.junit.Test
@@ -7,7 +8,9 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
+import org.robolectric.annotation.Config
 
+@Config(application = FakeApplication::class)
 class DbManagerTest {
 
     @Mock
@@ -28,7 +31,7 @@ class DbManagerTest {
     fun getAllTweets() {
         // when db manager get all tweets called
         mDbManager.getAllTweets()
-        //then tweet dao get all tweets called
+        // then tweet dao get all tweets called
         verify(mTweetDao).getAllTweets()
     }
 

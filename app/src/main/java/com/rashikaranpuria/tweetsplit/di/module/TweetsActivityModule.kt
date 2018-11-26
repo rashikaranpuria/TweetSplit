@@ -10,7 +10,6 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.indeterminateProgressDialog
-import javax.inject.Singleton
 
 @Module
 class TweetsActivityModule(val context: Context) {

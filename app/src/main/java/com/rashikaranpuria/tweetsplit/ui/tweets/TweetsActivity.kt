@@ -1,6 +1,7 @@
 package com.rashikaranpuria.tweetsplit.ui.tweets
 
 import android.app.ProgressDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Gravity
@@ -11,15 +12,16 @@ import com.rashikaranpuria.tweetsplit.data.db.entity.Tweet
 import com.rashikaranpuria.tweetsplit.di.module.TweetsActivityModule
 import com.rashikaranpuria.tweetsplit.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_tweets.*
+import org.jetbrains.anko.AlertBuilder
 import org.jetbrains.anko.alert
-import org.jetbrains.anko.verticalLayout
-import org.jetbrains.anko.padding
+import org.jetbrains.anko.customView
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.editText
 import org.jetbrains.anko.linearLayout
 import org.jetbrains.anko.lines
-import org.jetbrains.anko.customView
+import org.jetbrains.anko.padding
 import org.jetbrains.anko.sdk25.coroutines.onClick
+import org.jetbrains.anko.verticalLayout
 import javax.inject.Inject
 
 class TweetsActivity : BaseActivity(), ITweetsView {
@@ -34,11 +36,14 @@ class TweetsActivity : BaseActivity(), ITweetsView {
     @Inject
     lateinit var mTweetsAdapter: TweetsAdapter
 
+    lateinit var newTweetDialog: AlertBuilder<DialogInterface>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tweets)
 
         (application as TweetApplication).appComponent.tweetsActivityComponent(TweetsActivityModule(this)).inject(this)
+
         initOnCLickListeners()
         initTweetsAdapter()
 
@@ -46,6 +51,7 @@ class TweetsActivity : BaseActivity(), ITweetsView {
     }
 
     private fun initOnCLickListeners() {
+
         new_tweet.onClick {
             alert {
                 titleResource = R.string.new_tweet_title
@@ -61,7 +67,8 @@ class TweetsActivity : BaseActivity(), ITweetsView {
 
                         linearLayout {
                             textAlignment = right
-                            negativeButton(R.string.cancel) {}
+                            negativeButton(R.string.cancel) {
+                            }
                             positiveButton(R.string.tweet) {
                                 mTweetsActivityPresenter.newTweetPostButtonClicked(tweetEditText.text.toString())
                             }

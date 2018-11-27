@@ -14,13 +14,20 @@ import javax.inject.Inject
 const val TWEET_LENGTH_THRESHOLD = 50
 class TweetsActivityPresenter<V : ITweetsView> @Inject constructor(val mCompositeDisposable: CompositeDisposable, val mDataManager: IDataManager) : BasePresenter<V> (), ITweetsActivityPresenter<V> {
 
+    /**
+     * @param tweetText -> string of tweet text
+     * Invoked by view when new tweet post button clicked inside new tweet dialog
+     * handles empty tweet error case
+     *
+    */
     override fun newTweetPostButtonClicked(tweetText: String) {
         if (tweetText.isEmpty() || tweetText.isBlank()) {
             view?.showError(R.string.empty_input_error)
             return
         } else {
             view?.showProgressBar()
-            val tweets = getTweets(tweetText)
+            // send tweet text after pre processing to remove any extra whitespaces
+            val tweets = getTweets(preProcessString(tweetText))
             if (tweets.isNotEmpty()) {
                 val s = Completable.fromAction {
                     mDataManager.addTweets(tweets)
@@ -43,6 +50,10 @@ class TweetsActivityPresenter<V : ITweetsView> @Inject constructor(val mComposit
         }
     }
 
+    /**
+     * @param tweetText -> String tweet text
+     * @return List of tweets split into appropriate tweets within tweet length threshold
+     */
     fun getTweets(tweetText: String): List<Tweet> {
         val n = tweetText.length
         return if (n <= TWEET_LENGTH_THRESHOLD) {
@@ -52,6 +63,16 @@ class TweetsActivityPresenter<V : ITweetsView> @Inject constructor(val mComposit
         }
     }
 
+    /**
+     * @param str -> any string
+     * @return Original string with extra white spaces at the end and in between words removed
+     */
+    private fun preProcessString(str: String): String = str.trim().replace("\\s+".toRegex(), " ")
+
+    /**
+     * @param msg -> tweet text
+     * @return array of tweets within tweet length threshold
+     */
     fun splitMessage(msg: String): Array<String> {
         val wordsInMsg = msg.split(" ")
         val parts = calculatePartsInTweets(wordsInMsg, wordsInMsg.size)
@@ -62,39 +83,59 @@ class TweetsActivityPresenter<V : ITweetsView> @Inject constructor(val mComposit
         return getShortTweetListsInParts(wordsInMsg, parts)
     }
 
+    /**
+     * @param wordsInMsg -> words split by spaces
+     * @param parts -> Number of parts in which we have to break the tweet
+     * @return List of short tweets
+     */
     private fun getShortTweetListsInParts(wordsInMsg: List<String>, parts: Int): Array<String> {
         val listOfShortTweets = mutableListOf<String>()
         var currentPart = 1
         var i = 0
-        var lengthOfThisPart = ""
-        while (i < wordsInMsg.size) {
-            val partIndicator = if (lengthOfThisPart == "") {
+        var wordsInThisPart = ""
+        while (i<wordsInMsg.size) {
+            // append partIndicator at start of a new part of tweet
+            val partIndicator = if (wordsInThisPart == "") {
                 (currentPart.toString() + "/" + parts)
             } else {
                 ""
             }
-            lengthOfThisPart += partIndicator
-            while (i < wordsInMsg.size && lengthOfThisPart.length <= TWEET_LENGTH_THRESHOLD) {
-                val nextWordAttached = lengthOfThisPart + " " + wordsInMsg[i]
-                if (nextWordAttached.length > TWEET_LENGTH_THRESHOLD) {
+            wordsInThisPart += partIndicator
+            // Keep adding words to this part until we hit the end of the list of word,
+            // or hit the threshold.
+            while (i<wordsInMsg.size && wordsInThisPart.length <= TWEET_LENGTH_THRESHOLD) {
+                val nextWordAttached = wordsInThisPart + " " + wordsInMsg[i]
+                if (nextWordAttached.length> TWEET_LENGTH_THRESHOLD) {
                     break
                 } else {
-                    lengthOfThisPart = nextWordAttached
+                    wordsInThisPart = nextWordAttached
                     i++
                 }
             }
-            listOfShortTweets.add(lengthOfThisPart)
+            // add this part to list
+            listOfShortTweets.add(wordsInThisPart)
             currentPart++
-            lengthOfThisPart = ""
+            wordsInThisPart = ""
         }
         return listOfShortTweets.toTypedArray()
     }
 
+    /**
+     * @param wordsInMsg -> words split by spaces
+     * @param partsUpperBound -> Upper bound to how many parts at max we can have for this tweet.
+     * @return Number of arts in which this tweet can be broken
+     */
     private fun calculatePartsInTweets(wordsInMsg: List<String>, partsUpperBound: Int): Int {
+        // For every part p >= 2 and p <= upperbound, check if tweet can be broken into p parts correctly
         var parts = 2
-        while (!isValidPart(wordsInMsg, parts) && parts < partsUpperBound) {
+        // Early check for some error cases
+        if (parts >= partsUpperBound) {
+            return -1
+        }
+        while (!isValidPart(wordsInMsg, parts) && parts<partsUpperBound) {
             parts++
         }
+        // If no parts found <= upperbound, return -1 to show that tweet can't be broken
         return if (parts >= partsUpperBound) {
             -1
         } else {
@@ -102,97 +143,59 @@ class TweetsActivityPresenter<V : ITweetsView> @Inject constructor(val mComposit
         }
     }
 
+    /**
+     *@param wordsInMsg -> words split by spaces
+     * @param parts -> Parts for which we'll check if words can be slit into
+     * @return Boolean which reflects if the words can be broken into @param{parts} parts.
+     *
+     */
     private fun isValidPart(wordsInMsg: List<String>, parts: Int): Boolean {
         var currentPart = 1
         var i = 0
-        var lengthOfThisPart = ""
+        var wordsInThisPart = ""
         while (i<wordsInMsg.size) {
-            val partIndicator = if (lengthOfThisPart == "") {
+            // currentPart can't be greater than total number of parts
+            if (currentPart > parts) {
+                return false
+            }
+            // If it's s start of nw tweet, append part indicator to it.
+            val partIndicator = if (wordsInThisPart == "") {
                 (currentPart.toString() + "/" + parts)
             } else {
                 ""
             }
-            lengthOfThisPart += partIndicator
-            while (i < wordsInMsg.size && lengthOfThisPart.length <= TWEET_LENGTH_THRESHOLD) {
-                lengthOfThisPart += " " + wordsInMsg[i]
-                if (lengthOfThisPart.length > TWEET_LENGTH_THRESHOLD) {
+            wordsInThisPart += partIndicator
+            // Keep adding words to this part until we
+            // hit the end of word-list, or the threshold
+            while (i<wordsInMsg.size && wordsInThisPart.length <= TWEET_LENGTH_THRESHOLD) {
+                wordsInThisPart += " " + wordsInMsg[i]
+                if (wordsInThisPart.length > TWEET_LENGTH_THRESHOLD) {
                     break
                 } else {
                     i++
                 }
             }
-            if (lengthOfThisPart == partIndicator) {
+            // If no word is added to this part, it means
+            // the word can't be broken further
+            if (wordsInThisPart == partIndicator) {
                 return false
             } else {
+                // Work on next part
                 currentPart++
-                lengthOfThisPart = ""
+                wordsInThisPart = ""
             }
         }
         return currentPart - 1 == parts
     }
-
-// a less accurate split message method
-//    private fun splitMessage(s: String): List<String> {
-//        val n = s.length
-//        var numParts = (n/TWEET_LENGTH_THRESHOLD) + 1
-//        var numPartLen = numParts.toString().length
-//        val extra = (numParts*(3+numPartLen))/50 + 2
-//        numParts += extra
-//        numPartLen = numParts.toString().length
-//        val splitMsgList = mutableListOf<String>()
-//        val cur = StringBuilder("")
-//        var num = 1
-//        var i = 0
-//        while (i < n) {
-//            val rem = TWEET_LENGTH_THRESHOLD - 2 - num.toString().length - numPartLen
-//            if (i + rem >= n) {
-//                cur.append(s.substring(i..(s.lastIndex)))
-//                i += rem
-//            }
-//            else if (s[i+rem-1] == ' ') {
-//                cur.append(s.substring(i..(i+rem-2)))
-//                i += rem
-//            }
-//            else if (s[i+rem] == ' ') {
-//                cur.append(s.substring(i..(i+rem-1)))
-//                i += rem + 1
-//            }
-//            else {
-//                //go backtrack
-//                var j = i + rem - 1
-//                while (j > i && s[j] != ' ') j--
-//                if (j == i) {
-//                    view?.showError(R.string.unable_to_parse_error)
-//                    break
-//                }
-//                cur.append(s.substring(i..(j-1)))
-//                i = j + 1
-//
-//            }
-//            splitMsgList.add(cur.toString())
-//            cur.setLength(0)
-//            num++
-//        }
-//        if (i > n) num--
-//        var l = 1
-//        for (k in 0..splitMsgList.lastIndex)
-//        {
-//            cur.setLength(0)
-//            cur.append("$l/$num ${splitMsgList[k]}")
-//            splitMsgList[k] = cur.toString()
-//            if (splitMsgList[k].length > TWEET_LENGTH_THRESHOLD) {
-//                Log.d("SPLIT", "LENGTH ERROR in >${splitMsgList[k]}")
-//            }
-//            l++
-//        }
-//        return splitMsgList
-//    }
 
     override fun onAttach(v: V) {
         super.onAttach(v)
         fetchAllTweets()
     }
 
+    /**
+     * @return all stored tweets in database
+     */
     private fun fetchAllTweets() {
         view?.showProgressBar()
         mCompositeDisposable.add(
